@@ -34,6 +34,7 @@ CMakeFiles/OOP_Lab4.dir/Headwaiter.cpp.obj: ../macros.h
 
 CMakeFiles/OOP_Lab4.dir/Human.cpp.obj: ../Human.cpp
 CMakeFiles/OOP_Lab4.dir/Human.cpp.obj: ../Human.h
+CMakeFiles/OOP_Lab4.dir/Human.cpp.obj: ../macros.h
 
 CMakeFiles/OOP_Lab4.dir/List.cpp.obj: ../List.cpp
 CMakeFiles/OOP_Lab4.dir/List.cpp.obj: ../List.h

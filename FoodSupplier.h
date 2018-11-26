@@ -9,11 +9,13 @@
 
 class FoodSupplier {
 private:
-    List<priceList> availableFood;
+    List<priceList>* availableFood;
+//    List<priceList> &availableFood = *availableFoodPtr;
 public:
     FoodSupplier();
     ~FoodSupplier() = default;
-    const List<priceList> &getAvailableFood() const;
+    List<priceList>& getAvailableFood() const;
+    void fillOrederableIngredients(List<priceList>* orderableIngredients);
 };
 
 

@@ -13,31 +13,31 @@ Administrator::Administrator(): Human() {
     this->name = "Administrator";
 }
 
-List<selectionList> Administrator::formReservedTablesList(List<selectionList>& reservedTables) {
-//    int totalTablesAmount = reservedTables.length;
+void Administrator::formReservedTablesList(List<selectionList>& reservedTables) {
+//    int totalTablesAmount = reservedTables.length(;
 //    List<char*> reservedTables;
         //clearing old flags
-    for (int j = 0; j < reservedTables.length; ++j) {
+    for (int j = 0; j < reservedTables.length(); ++j) {
         reservedTables[j].flag = false;
     }
         //setting new flags
     int reservation;
-    for (int i = 0; i < reservedTables.length; ++i) {
+    for (int i = 0; i < reservedTables.length(); ++i) {
         reservation = rand()%10;
         if(!reservation) reservedTables[i].flag = true;
     }
-    return reservedTables;
+//    return reservedTables;
 }
 
-List<amountList> Administrator::orderIngredients(List<amountList> &chefDesiredIngredients, List<amountList> &availableIngredients, const List<priceList> &orderableIngredients, int &balance) {
-//    availableIngredients = List<amountList>(chefDesiredIngredients.length);//initialised in constructor
-    for (int i = 0; i < chefDesiredIngredients.length; ++i) {
+void Administrator::orderIngredients(List<amountList> &chefDesiredIngredients, List<amountList> &availableIngredients, const List<priceList> &orderableIngredients, int &balance) {
+//    availableIngredients = List<amountList>(chefDesiredIngredients.length();//initialised in constructor
+    for (int i = 0; i < chefDesiredIngredients.length(); ++i) {
 //        availableIngredients[i].name = strdup(chefDesiredIngredients[i].name);//done in constructor
         availableIngredients[i].amount += chefDesiredIngredients[i].amount;
         balance -= chefDesiredIngredients[i].amount * orderableIngredients[i].price;
         chefDesiredIngredients[i].amount = 0;
     }
-    return availableIngredients;
+//    return availableIngredients;
 }
 
 void Administrator::updateBalance(Client *client, int &dailyProfit, int &balance) {
@@ -56,18 +56,56 @@ void Administrator::coutProfits(int& yesterdaysBalance, int &dailyProfit, int &b
 
 void Administrator::coutOrders(const List<amountList>& orders) const {
     RL std::cout << std::setw(70) << "Orders taken during the day:" << std::endl;
-    for (int i = 0; i < orders.length; ++i) {
+    for (int i = 0; i < orders.length(); ++i) {
         RL std::cout << orders[i].name << ": " << orders[i].amount << std::endl;
     }
 }
 
-void Administrator::updateOrderLogs(const List<priceList>& menu, List<amountList> &orders, List<selectionList> &clientsOrder) {
-    orders = List<amountList>(menu.length);
-    clientsOrder = List<selectionList>(menu.length);
-    for (int k = 0; k < menu.length; ++k) {
-        orders[k].amount = 0;
-        clientsOrder[k].flag = false;
-        orders[k].name = strdup(menu[k].name);
-        clientsOrder[k].name = strdup(menu[k].name);
+void Administrator::updateOrderLogs(const List<priceList>* menu, List<amountList> *orders, List<selectionList> *clientsOrder) {
+    delete orders;
+    orders = new List<amountList>(menu->length());//stored in stack
+    delete clientsOrder;
+    clientsOrder = new List<selectionList>(menu->length());
+    for (int k = 0; k < menu->length(); ++k) {
+        (*orders)[k].amount = 0;
+        (*clientsOrder)[k].flag = false;
+        (*orders)[k].name = strdup((*menu)[k].name);
+        (*clientsOrder)[k].name = strdup((*menu)[k].name);
     }
+    cout << "ORDERS: " << orders->length() << endl;
+    for (int i = 0; i < orders->length(); ++i) {
+        cout << (*orders)[i].name << ": " << (*orders)[i].amount << endl;
+    }
+    cout << "CLIENTSORDER: " << clientsOrder->length() << endl;
+    for (int i = 0; i < clientsOrder->length(); ++i) {
+        cout << (*clientsOrder)[i].name << ": " << (*clientsOrder)[i].flag << endl;
+    }
+}
+
+List<amountList> *Administrator::updateOrders(const List<priceList> *menu, List<amountList> *orders) {
+    delete orders;
+    orders = new List<amountList>(menu->length());//stored in stack
+    for (int k = 0; k < menu->length(); ++k) {
+        (*orders)[k].amount = 0;
+        (*orders)[k].name = strdup((*menu)[k].name);
+    }
+//    cout << "ORDERS: " << orders->length() << endl;
+//    for (int i = 0; i < orders->length(); ++i) {
+//        cout << (*orders)[i].name << ": " << (*orders)[i].amount << endl;
+//    }
+    return orders;
+}
+
+List<selectionList> *Administrator::updateClientsOrder(const List<priceList> *menu, List<selectionList> *clientsOrder) {
+    delete clientsOrder;
+    clientsOrder = new List<selectionList>(menu->length());
+    for (int k = 0; k < menu->length(); ++k) {
+        (*clientsOrder)[k].flag = false;
+        (*clientsOrder)[k].name = strdup((*menu)[k].name);
+    }
+//    cout << "CLIENTSORDER: " << clientsOrder->length() << endl;
+//    for (int i = 0; i < clientsOrder->length(); ++i) {
+//        cout << (*clientsOrder)[i].name << ": " << (*clientsOrder)[i].flag << endl;
+//    }
+    return clientsOrder;
 }

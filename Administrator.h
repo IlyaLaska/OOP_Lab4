@@ -15,12 +15,14 @@ class Administrator: public Human {
 public:
     Administrator();
     ~Administrator() = default;
-    List<selectionList> formReservedTablesList(List<selectionList>& reservedTables);
-    List<amountList> orderIngredients(List<amountList> &chefDesiredIngredients, List<amountList> &availableIngredients, const List<priceList> &orderableIngredients, int &balance);
+    void formReservedTablesList(List<selectionList>& reservedTables);
+    void orderIngredients(List<amountList> &chefDesiredIngredients, List<amountList> &availableIngredients, const List<priceList> &orderableIngredients, int &balance);
     void updateBalance(Client* client, int& dailyProfit, int& balance);
     void coutProfits(int& yesterdaysBalance, int& dailyProfit, int& balance, int& dailyExpenses) const;
     void coutOrders(const List<amountList>& orders) const;
-    void updateOrderLogs(const List<priceList>& menu, List<amountList>& orders, List<selectionList>& clientsOrder);
+    void updateOrderLogs(const List<priceList>* menu, List<amountList>* orders, List<selectionList>* clientsOrder);
+    List<amountList>* updateOrders(const List<priceList>* menu, List<amountList>* orders);
+    List<selectionList>* updateClientsOrder(const List<priceList>* menu, List<selectionList>* clientsOrder);
 };
 
 

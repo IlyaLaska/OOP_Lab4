@@ -17,6 +17,7 @@
 int Client::clientPosition = 0;
 
 Client::Client(): Human() {
+    DL cout << "Client created" << endl;
     char clientPositionStr[10] = "";
     sprintf(clientPositionStr, "Client %i", clientPosition);
     clientPosition++;

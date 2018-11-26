@@ -1,4 +1,4 @@
-#define DEBUG
+//#define DEBUG
 
 //RL -release log
 //DL - debug log

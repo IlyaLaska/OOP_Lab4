@@ -25,6 +25,8 @@ Human.h
 D:/JetBrains/apps/CLion/Projects/OOP_Lab4/Human.h
 List.h
 D:/JetBrains/apps/CLion/Projects/OOP_Lab4/List.h
+iostream
+-
 
 D:/JetBrains/apps/CLion/Projects/OOP_Lab4/FoodSupplier.h
 List.h
@@ -37,6 +39,10 @@ Client.h
 D:/JetBrains/apps/CLion/Projects/OOP_Lab4/Client.h
 
 D:/JetBrains/apps/CLion/Projects/OOP_Lab4/Human.h
+macros.h
+D:/JetBrains/apps/CLion/Projects/OOP_Lab4/macros.h
+iostream
+-
 
 D:/JetBrains/apps/CLion/Projects/OOP_Lab4/List.h
 stdexcept

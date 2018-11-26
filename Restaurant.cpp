@@ -10,79 +10,69 @@
 #include "macros.h"
 
 #include <iostream>
+
 using namespace std;
 
-Restaurant::Restaurant() {
+Restaurant::Restaurant(): reservedTables(new List<selectionList>(tablesAmount)), occupiedTables(new List<selectionList>(tablesAmount)) {
     srand(static_cast<unsigned int>(time(NULL)));
-    std::cout << "HeRE" << endl;
     //forming reservedTables here since it only has to be done once and only updated every day by administrator
-    reservedTables.~List();
-    occupiedTables.~List();
-    reservedTables = List<selectionList>(tablesAmount);
-    occupiedTables = List<selectionList>(tablesAmount);
-    std::cout << "HeRE" << endl;
+//    reservedTables = new List<selectionList>(tablesAmount);
+//    occupiedTables = new List<selectionList>(tablesAmount);
     //filling reservedTables & occupiedTables
     char buffer[6];
     for (int j = 0; j < tablesAmount; ++j) {
-        reservedTables[j].flag = false;
-        occupiedTables[j].flag = false;
-        sprintf(buffer, "%i", j+1);
-        if(j == 0) strcat(buffer, "st");
-        if(j == 1) strcat(buffer, "nd");
-        if(j == 2) strcat(buffer, "rd");
-        if(j > 2) strcat(buffer, "th");
-        reservedTables[j].name = strdup(buffer);
-        occupiedTables[j].name = strdup(buffer);
+        (*reservedTables)[j].flag = false;
+        (*occupiedTables)[j].flag = false;
+        sprintf(buffer, "%i", j + 1);
+        if (j == 0) strcat(buffer, "st");
+        if (j == 1) strcat(buffer, "nd");
+        if (j == 2) strcat(buffer, "rd");
+        if (j > 2) strcat(buffer, "th");
+        (*reservedTables)[j].name = strdup(buffer);
+        (*occupiedTables)[j].name = strdup(buffer);
     }
 
-    headwaiter = Headwaiter();
-    waiter = Waiter();
-    chef = Chef();
-    administrator = Administrator();
-    foodSupplier = FoodSupplier();
-
-    orderableIngredients = foodSupplier.getAvailableFood();
-
-    availableIngredients = List<amountList>(orderableIngredients.length);
-    chefDesiredIngredients = List<amountList>(orderableIngredients.length);
-    for (int l = 0; l < orderableIngredients.length; ++l) {
-        availableIngredients[l].name = strdup(orderableIngredients[l].name);
-        chefDesiredIngredients[l].name = strdup(orderableIngredients[l].name);
-        availableIngredients[l].amount = 0;
-        chefDesiredIngredients[l].amount = 0;
+//    headwaiter = Headwaiter();
+//    waiter = Waiter();
+//    chef = Chef();
+//    administrator = Administrator();
+//    foodSupplier = FoodSupplier();
+//    foodSupplier.fillOrederableIngredients(orderableIngredients);
+    orderableIngredients = new List<priceList>(foodSupplier.getAvailableFood());
+    availableIngredients = new List<amountList>(orderableIngredients->length());
+    chefDesiredIngredients = new List<amountList>(orderableIngredients->length());
+    for (int l = 0; l < orderableIngredients->length(); ++l) {
+        (*availableIngredients)[l].name = strdup((*orderableIngredients)[l].name);
+        (*chefDesiredIngredients)[l].name = strdup((*orderableIngredients)[l].name);
+        (*availableIngredients)[l].amount = 0;
+        (*chefDesiredIngredients)[l].amount = 0;
     }
+    chefDesiredIngredients = new List<amountList>(orderableIngredients->length());
+    chef.orderIngredients((*chefDesiredIngredients), (*orderableIngredients));
 
-    chefDesiredIngredients = chef.orderIngredients(chefDesiredIngredients, orderableIngredients);
+    administrator.orderIngredients((*chefDesiredIngredients), (*availableIngredients), (*orderableIngredients), balance);
+    menu = chef.generateMenu((*availableIngredients), (*orderableIngredients));//TODO will this cause memory leaks?
+    administrator.formReservedTablesList((*reservedTables));
 
-//    availableIngredients = List<amountList>(orderableIngredients.length);
-//    for (int m = 0; m < availableIngredients.length; ++m) {
-//        availableIngredients[m].amount = 0;
-//        availableIngredients[m].name = strdup(orderableIngredients[m].name);
-//    }
-
-    availableIngredients = administrator.orderIngredients(chefDesiredIngredients, availableIngredients, orderableIngredients, balance);
-    menu = chef.generateMenu(availableIngredients, orderableIngredients);
-    reservedTables = administrator.formReservedTablesList(reservedTables);
-
-    orders = List<amountList>(menu.length);
-    clientsOrder = List<selectionList>(menu.length);
+    orders = new List<amountList>(menu->length());
+    clientsOrder = new List<selectionList>(menu->length());
     //filling orders & clientsOrder(template)
-    for (int k = 0; k < menu.length; ++k) {
-        orders[k].amount = 0;
-        clientsOrder[k].flag = false;
-        orders[k].name = strdup(menu[k].name);
-        clientsOrder[k].name = strdup(menu[k].name);
+    for (int k = 0; k < menu->length(); ++k) {
+        (*orders)[k].amount = 0;
+        (*clientsOrder)[k].flag = false;
+        (*orders)[k].name = strdup((*menu)[k].name);
+        (*clientsOrder)[k].name = strdup((*menu)[k].name);
     }
 
     RL std::cout << "MENU:" << endl;
-    for (int i = 0; i < menu.length; ++i) {
-        RL std::cout << menu.list[i].name << ": " << menu.list[i].price << endl;
+    for (int i = 0; i < menu->length(); ++i) {
+        RL std::cout << menu->list[i].name << ": " << menu->list[i].price << endl;
     }
-    RL std::cout << "Balance: " << balance << endl;
+    RL std::cout << endl << "Balance: " << balance << endl;
 }
 
 const List<priceList> &Restaurant::getOrderableIngredients() const {
-    return orderableIngredients;
+    return (*orderableIngredients);
 }
 
 void Restaurant::workOneDay() {
@@ -94,47 +84,52 @@ void Restaurant::workOneDay() {
     int roll;
     int clientPossibilities = 15 * 6; //15 working hours * 6 customers per hour max
     int clearTable;//var to simulate the probability of one client leaving
-    Client* client;// = new Client();
+    Client *client;// = new Client();
     for (int i = 0; i < clientPossibilities; ++i) {
-        roll = rand()%20;
-        if(roll >= 10) {
+        roll = rand() % 20;
+        if (roll >= 10) {
+            RL cout << endl;
             client = new Client();
             client->leaveCoat();
-            bool freeTable = headwaiter.findTable(client, reservedTables, occupiedTables);
+            bool freeTable = headwaiter.findTable(client, (*reservedTables), (*occupiedTables));
 //            RL std::cout << "WAS THERE A TABLE: " << freeTable << std::endl;
-            if(!freeTable) {
+            if (!freeTable) {
                 RL std::cout << "There was no table for " << client->getName() << ", we are very sorry." << std::endl;
                 goto noFreeTables;
             }
             headwaiter.callWaiter(client);
-            clientsOrder = waiter.takeOrder(client, clientsOrder, menu);
-            orders = waiter.fillOrders(clientsOrder, orders);
-            chef.prepareOrder(clientsOrder, availableIngredients, menu);
-            chefDesiredIngredients = chef.checkForIngredientShortage(availableIngredients, chefDesiredIngredients);
+            waiter.takeOrder(client, (*clientsOrder), (*menu));
+            waiter.fillOrders((*clientsOrder), (*orders));
+            chef.prepareOrder((*clientsOrder), (*availableIngredients), (*menu));
+            chef.checkForIngredientShortage((*availableIngredients), (*chefDesiredIngredients));
             balanceChange = balance;
-            availableIngredients = administrator.orderIngredients(chefDesiredIngredients, availableIngredients, orderableIngredients, balance);
+            administrator.orderIngredients((*chefDesiredIngredients), (*availableIngredients), (*orderableIngredients),
+                                           balance);
             balanceChange -= balance;
             dailyExpenses += balanceChange;
             waiter.bringOrder(client);
-            client->setCheque(waiter.bringCheque(clientsOrder, menu));
+            client->setCheque(waiter.bringCheque((*clientsOrder), (*menu)));
             administrator.updateBalance(client, dailyProfit, balance);
-            waiter.clearTable(client, clientsOrder, occupiedTables);
+            waiter.clearTable(client, (*clientsOrder), (*occupiedTables));
 
             //if there were no free tables or after meal
             noFreeTables:
             client->takeCoat();
             headwaiter.bidFarewell(client);
+//            cout << "AM HERE" << endl;
             delete client;
+            RL cout << endl;
         }//END: roll >= 10 a.k.a. client arrived
     }//END: for i < clientPossibilities - end of the working hours
-    administrator.coutOrders(orders);
+    administrator.coutOrders((*orders));
     administrator.coutProfits(yesterdaysBalance, dailyProfit, balance, dailyExpenses);
-    administrator.formReservedTablesList(reservedTables);
+    administrator.formReservedTablesList((*reservedTables));
 
     //TODO understand if this part is stupid or not (memory leaks - wise)
-    menu.~List();
-    menu = chef.generateMenu(availableIngredients, orderableIngredients);
-    administrator.updateOrderLogs(menu, orders, clientsOrder);
+    delete menu;
+    menu = chef.generateMenu((*availableIngredients), (*orderableIngredients));
+    orders = administrator.updateOrders(menu, orders);
+    clientsOrder = administrator.updateClientsOrder(menu, clientsOrder);
 }
 
 Restaurant::~Restaurant() {

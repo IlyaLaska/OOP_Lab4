@@ -13,6 +13,12 @@ Headwaiter::Headwaiter() : Human() {
 
 bool Headwaiter::findTable(Client* client, List<selectionList>& reservedTables, List<selectionList>& occupiedTables) {
     if(client->hasReservation()) {//reservation
+//        for (int i = 0; i < 20; ++i) {
+//            cout << "tables: " << occupiedTables[i].name << ": " << occupiedTables[i].flag << endl;
+//        }
+//        for (int i = 0; i < 20; ++i) {
+//            cout << "tables2: " << reservedTables[i].name << ": " << reservedTables[i].flag << endl;
+//        }
         if(reservedTables[client->getReservedTable()].flag) {//actual reservation
             //put him at the table he desires, clear reserved plaque from that table
             occupiedTables[client->getReservedTable()].flag = true;
@@ -25,7 +31,7 @@ bool Headwaiter::findTable(Client* client, List<selectionList>& reservedTables, 
     } else {//no reservation / fake reservation
         noReservation:
         bool hasFreeTable = false;
-        for (int j = 0; j < occupiedTables.length; ++j) {
+        for (int j = 0; j < occupiedTables.length(); ++j) {
             if(!occupiedTables[j].flag && !reservedTables[j].flag) {//table not occupied & not reserved
                 occupiedTables[j].flag = true;
                 client->setTableNo(j);

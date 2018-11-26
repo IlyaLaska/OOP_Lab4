@@ -12,11 +12,11 @@ class Waiter: public Human {
 public:
     Waiter();
     ~Waiter() = default;
-    List<int> takeOrder(const Client* client, const List<priceList> menu);//why do i need 1st const, not second
-    List<selectionList> takeOrder(const Client* client, List<selectionList>& clientsOrder, const List<priceList> menu);//why do i need 1st const, not second
-    List<amountList> fillOrders(List<selectionList>& clientsOrder, List<amountList>& orders);
+    List<int> takeOrder(const Client* client, const List<priceList>& menu);//why do i need 1st const, not second
+    void takeOrder(const Client* client, List<selectionList>& clientsOrder, const List<priceList>& menu);//why do i need 1st const, not second
+    void fillOrders(List<selectionList>& clientsOrder, List<amountList>& orders);
     void bringOrder(Client* client);
-    int bringCheque(List<selectionList> clientsOrder, List<priceList> menu);
+    int bringCheque(List<selectionList>& clientsOrder, List<priceList>& menu);
     void clearTable(Client* client, List<selectionList>& clientsOrder, List<selectionList>& occupiedTables);
 };
 

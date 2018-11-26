@@ -8,6 +8,9 @@
 #include "Human.h"
 #include "List.h"
 
+#include <iostream>
+using namespace std;
+
 class Client: public Human {
 private:
     static int clientPosition;
@@ -15,11 +18,11 @@ private:
     bool reservation = false;
     int reservedTable;
     int cheque;
-    List<priceList> order;
+//    List<priceList> order;
     int tableNo;
 public:
     Client();
-    ~Client() = default;
+    ~Client() {DL cout << "Client destroyed" << endl;};
     void leaveCoat();
     void takeCoat();
     bool hasReservation() const;

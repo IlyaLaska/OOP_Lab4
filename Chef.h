@@ -19,11 +19,11 @@ private:
 public:
     Chef();
     ~Chef() = default;
-    priceList generateDish(List<amountList> availableIngredients, List<priceList> orderableIngredients);
-    List<priceList> generateMenu(List<amountList> availableIngredients, List<priceList> orderableIngredients);
-    List<amountList> orderIngredients(List<amountList>& chefDesiredIngredients, const List<priceList> orderableIngredients);
-    void prepareOrder(List<selectionList> clientsOrder, List<amountList>& availableIngredients, List<priceList> menu);
-    List<amountList> checkForIngredientShortage(List<amountList>& availableIngredients, List<amountList> &chefDesiredIngredients);
+    priceList generateDish(List<amountList>& availableIngredients, List<priceList>& orderableIngredients);
+    List<priceList>* generateMenu(List<amountList>& availableIngredients, List<priceList>& orderableIngredients);
+    void orderIngredients(List<amountList>& chefDesiredIngredients, const List<priceList>& orderableIngredients);
+    void prepareOrder(List<selectionList>& clientsOrder, List<amountList>& availableIngredients, List<priceList>& menu);
+    void checkForIngredientShortage(List<amountList>& availableIngredients, List<amountList> &chefDesiredIngredients);
 };
 
 

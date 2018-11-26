@@ -22,17 +22,17 @@ private:
     int tablesAmount = 20;
     int balance = 0;
 
-    List<priceList> menu;
-    List<priceList> orderableIngredients;
+    List<priceList>* menu;//variable len
+    List<priceList>* orderableIngredients;
 
-    List<amountList> availableIngredients;
-    List<amountList> chefDesiredIngredients;//filled by chef at the end of the day. Administrator copies it to availableIngredients
+    List<amountList>* availableIngredients;
+    List<amountList>* chefDesiredIngredients;//filled by chef at the end of the day. Administrator copies it to availableIngredients
 
-    List<selectionList> reservedTables;
-    List<selectionList> occupiedTables;
+    List<selectionList>* reservedTables;//20 default
+    List<selectionList>* occupiedTables;//20 default
 
-    List<amountList> orders;//copy menu here increment amount on order
-    List<selectionList> clientsOrder;
+    List<amountList>* orders;//copy menu here increment amount on order//variable len with menu
+    List<selectionList>* clientsOrder;//variable len with menu
 
     Headwaiter headwaiter;
     Waiter waiter;
